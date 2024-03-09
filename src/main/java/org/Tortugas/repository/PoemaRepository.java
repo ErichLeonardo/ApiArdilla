@@ -7,8 +7,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PoemaRepository extends JpaRepository<Poema, Integer> {
 
-    Iterable<Poema> findAllByOrderByIdDesc();
-
-
-
 }

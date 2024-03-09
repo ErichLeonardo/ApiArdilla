@@ -3,11 +3,13 @@ package org.Tortugas.controller;
 import org.Tortugas.model.Ardilla;
 import org.Tortugas.service.ArdillaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "*")
+import java.util.List;
+
+@CrossOrigin
 @RestController
 @RequestMapping("/ardilla")
 public class ArdillaController {
@@ -15,29 +17,27 @@ public class ArdillaController {
     @Autowired
     ArdillaService service;
 
-    @RequestMapping("/all")
-    public Iterable<Ardilla> findAll() {
-        return service.findAll();
+    @GetMapping
+    public List<Ardilla> getAllArdillas() {
+        return service.getAllArdillas();
     }
 
-    @RequestMapping("/find")
-    public Ardilla findById(int id) {
-        return service.findById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<Ardilla> getArdillaById(@PathVariable("id") int id) {
+        Ardilla ardilla = service.getArdillaById(id);
+        return ResponseEntity.ok(ardilla);
     }
 
-    @RequestMapping("/create")
-    public void create(Ardilla ardilla) {
-        service.save(ardilla);
+    @PostMapping
+    public ResponseEntity<Ardilla> createOrUpdateArdilla(@RequestBody Ardilla ardilla) {
+        Ardilla createdOrUpdatedArdilla = service.createOrUpdateArdilla(ardilla);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdOrUpdatedArdilla);
     }
 
-    @RequestMapping("/delete")
-    public void deleteAll() {
-        service.deleteAll();
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteArdilla(@PathVariable int id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
-
-    @RequestMapping("/update")
-    public void update(Ardilla ardilla) {
-        service.update(ardilla);
-    }
-
 }
+
