@@ -11,32 +11,35 @@ public class Ardilla {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "dni")
+    private String dni;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "password")
+    private String password;
+
     @Column(name = "nombre")
     private String nombre;
 
     @Column(name = "puntos")
     private int puntos;
 
-    @Column(name = "skin")
-    private String skin;
 
-    //una pardilla puede tener muchos poemas y un poema puede ser de muchas ardillas
-    @ManyToMany
-    @JoinTable(
-            name = "ardilla_poema",
-            joinColumns = @JoinColumn(name = "id_ardilla"),
-            inverseJoinColumns = @JoinColumn(name = "id_poema")
-    )
-    private Set<Poema> poemas;
+
+
 
     public Ardilla() {
     }
 
-    public Ardilla(int id, String nombre, int puntos) {
+    public Ardilla(int id, String dni, String email, String password, String nombre, int puntos) {
         this.id = id;
+        this.dni = dni;
+        this.email = email;
+        this.password = password;
         this.nombre = nombre;
         this.puntos = puntos;
-        this.skin = "";
     }
 
     public int getId() {
@@ -45,6 +48,30 @@ public class Ardilla {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getNombre() {
@@ -63,11 +90,5 @@ public class Ardilla {
         this.puntos = puntos;
     }
 
-    public String getSkin() {
-        return skin;
-    }
 
-    public void setSkin(String skin) {
-        this.skin = skin;
-    }
 }
