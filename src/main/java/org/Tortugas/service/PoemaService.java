@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PoemaService {
 
-    private final PoemaRepository poemaRepository; // Inyecta el repositorio en lugar de PoemaService
+    private final PoemaRepository poemaRepository;
 
     @Autowired
     public PoemaService(PoemaRepository poemaRepository) {
