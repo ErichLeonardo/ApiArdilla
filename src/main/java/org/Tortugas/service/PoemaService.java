@@ -1,6 +1,7 @@
 package org.Tortugas.service;
 
 import org.Tortugas.model.Poema;
+import org.Tortugas.repository.PoemaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -9,29 +10,32 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PoemaService {
+
+    private final PoemaRepository poemaRepository; // Inyecta el repositorio en lugar de PoemaService
+
     @Autowired
-    PoemaService service;
+    public PoemaService(PoemaRepository poemaRepository) {
+        this.poemaRepository = poemaRepository;
+    }
 
     public Iterable<Poema> findAll() {
-        return service.findAll();
+        return poemaRepository.findAll();
     }
 
     public Poema findById(int id) {
-        return service.findById(id);
+        return poemaRepository.findById(id).orElse(null);
     }
 
     public void save(Poema poema) {
-        service.save(poema);
+        poemaRepository.save(poema);
     }
 
     @Transactional
-    @Modifying
-    @Query("DELETE FROM Poema")
     public void deleteAll() {
-        service.deleteAll();
+        poemaRepository.deleteAll();
     }
 
     public void update(Poema poema) {
-        service.update(poema);
+        poemaRepository.save(poema);
     }
 }
