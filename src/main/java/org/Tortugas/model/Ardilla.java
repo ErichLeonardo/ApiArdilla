@@ -27,7 +27,13 @@ public class Ardilla {
     private int puntos;
 
 
-
+    @ManyToMany
+    @JoinTable(
+            name = "ardilla_poema",
+            joinColumns = @JoinColumn(name = "ardilla_id"),
+            inverseJoinColumns = @JoinColumn(name = "poema_id")
+    )
+    private Set<Poema> poemas;
 
 
     public Ardilla() {
