@@ -1,5 +1,6 @@
 package org.Tortugas.service;
 
+import org.Tortugas.exception.RecordNotFoundException;
 import org.Tortugas.model.Poema;
 import org.Tortugas.repository.PoemaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,34 +9,34 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class PoemaService {
 
-    private final PoemaRepository poemaRepository;
-
     @Autowired
-    public PoemaService(PoemaRepository poemaRepository) {
-        this.poemaRepository = poemaRepository;
+    PoemaRepository repo;
+
+    public List<Poema> getAllPoemas() {
+        return repo.findAll();
     }
 
-    public Iterable<Poema> findAll() {
-        return poemaRepository.findAll();
+    public Poema getPoemaById(int id) {
+        Optional<Poema> poema = repo.findById(id);
+        if (poema.isPresent()) {
+            return poema.get();
+        } else {
+            throw new RecordNotFoundException("No se encontró un poema con el id: " + id);
+        }
     }
 
-    public Poema findById(int id) {
-        return poemaRepository.findById(id).orElse(null);
+    public Poema createOrUpdatePoema(Poema poema) {
+        return repo.save(poema);
     }
 
-    public void save(Poema poema) {
-        poemaRepository.save(poema);
-    }
 
-    @Transactional
-    public void deleteAll() {
-        poemaRepository.deleteAll();
-    }
-
-    public void update(Poema poema) {
-        poemaRepository.save(poema);
+    public void deletePoema(int id) {
+        repo.deleteById(id);
     }
 }
