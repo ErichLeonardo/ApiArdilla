@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,11 +18,11 @@ public class Server {
     private static final int PORT = 8081;
     private static final int MAX_CLIENTS = 100;
 
+    // Lista para mantener un seguimiento de las conexiones de los clientes (Ardillas)
+    static List<Ardilla> ardillasConectadas = new ArrayList<>();
+
     // Mapa que mantiene un seguimiento de las conexiones de los clientes (Ardillas) y sus respectivos ObjectOutputStream
     static Map<Ardilla, ObjectOutputStream> clientes = new HashMap<>();
-
-    // Mapa que mantiene un seguimiento de los poemas recogidos por cada Ardilla
-    static Map<Ardilla, Poema> poemasRecogidos = new HashMap<>();
 
     // ExecutorService gestiona un conjunto de hilos para manejar las conexiones de los clientes
     static ExecutorService pool = Executors.newFixedThreadPool(MAX_CLIENTS);
@@ -35,16 +37,6 @@ public class Server {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    // Método para enviar un poema a todos los clientes conectados
-    static void broadcast(Poema poema) throws IOException {
-        synchronized (clientes) {
-            for (ObjectOutputStream cliente : clientes.values()) {
-                cliente.writeObject(poema);
-                cliente.flush();
-            }
         }
     }
 
@@ -63,6 +55,7 @@ public class Server {
                 ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
                 // Crea una nueva Ardilla y la agrega al mapa de clientes
                 Ardilla ardilla = new Ardilla();
+                ardillasConectadas.add(ardilla); // Agrega la ardilla a la lista de ardillas conectadas
                 clientes.put(ardilla, outputStream);
 
                 // Mostrar mensaje cuando una ardilla se conecta
